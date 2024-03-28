@@ -1,0 +1,59 @@
+{% extends 'news/main.html' %}
+
+{% block title %} Главная {% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
+    <div class="container">
+        <h1>Табель Новостей</h1>
+        <br>
+            <form action="" method="GET">
+                {{ filterset.form.as_p }}
+                <input type="submit" value="Поиск">
+            </form>
+        <br>
+            {% if news %}
+                {% for new in news %}
+                    <div class="alert alert-warning mt-1">
+                        <a href="{% url 'news:news_detail' new.id %}"><h3>Author: {{ new.author }}</h3></a>
+                        <p>Title :{{ new.title|truncatewords:2 }}</p>
+                    </div>
+            {% endfor %}
+        {% else %}
+            <p> Нет Новостей</p>
+        {% endif %}
+    </div>
+<!--<button> <a href="sign/logout/">Выйти</a> </button>-->
+
+{# Добавляем пагинацию на страницу #}
+
+    {# Информация о предыдущих страницах #}
+    {% if page_obj.has_previous %}
+        <a href="?page=1">1</a>
+        {% if page_obj.previous_page_number != 1 %}
+            ...
+            <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
+    {% endif %}
+
+    {# Информация о текущей странице #}
+    {{ page_obj.number }}
+
+    {# Информация о следующих страницах #}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+        {% if paginator.num_pages != page_obj.next_page_number %}
+            ...
+            <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+        {% endif %}
+    {% endif %}
+
+<br>
+<br>
+<br>
+<form action="{% url 'sign:logout' %}" method="post">
+    {% csrf_token %}
+</form>
+{% endblock %}

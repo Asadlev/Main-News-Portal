@@ -1,0 +1,22 @@
+{% extends 'news/main.html' %}
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+
+<form action="{% url 'appointment:make_appointment' %}" method="POST" enctype="multipart/form-data">
+    {% load cache %}
+    {% cache 1 number %}
+    {% csrf_token %}
+    <label for="client_name">Your name</label><br>
+        <input type="text" name="client_name"><br>
+    <label for="message"> message </label><br>
+        <input type="text" name="message"><br>
+    <label for="date">Choose time</label><br>
+        <input type="date" name="date"><br>
+        <input type="submit"><br>
+    {% endcache %}
+</form>
+{% endblock %}
+
