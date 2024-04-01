@@ -1,5 +1,5 @@
 {% extends 'news/main.html' %}
-
+{% load custom_filters %}
 
 {% block content %}
 <br>
@@ -11,7 +11,7 @@
     <h1>Author: {{ new.author }}</h1>
     <h2>Title: {{ new.title }}</h2>
     <p>Дата: {{ new.created_at }}</p>
-    <p>{{ new.content }}</p>
+    <p>{{ new.text }}</p>
     <p>rating: {{ new.rating }}</p>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">

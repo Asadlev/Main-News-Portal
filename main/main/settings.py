@@ -1,4 +1,6 @@
 import os
+import logging
+from django.utils.log import AdminEmailHandler
 from pathlib import Path
 
 from django.urls import reverse_lazy
@@ -11,10 +13,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(hv39mt^&=i$jywk)fbx@-5bjd*fb%fnv7(4h6*a+aaju43x&5'
+SECRET_KEY = 'django-insecure-(we2^&=i$jywk)fbx@-5bjd*fb%fnv7(4h6*a+aaju43x&5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -55,8 +57,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    # mymiddleware
+    # 'main.createmymiddleware.SimpleMiddleware',
+    
     # allauth
     'allauth.account.middleware.AccountMiddleware',
+
 ]
 
 
@@ -187,4 +193,72 @@ LOGIN_URL = 'sign/login/'
 SITE_ID = 1
 LOGIN_REDIRECT_URL = "news:news_list"
 LOGOUT_REDIRECT_URL = "/sign/login/"
+
+# logging
+
+
+# Определяем формат сообщений
+log_format = '%(asctime)s [%(levelname)s] %(pathname)s: %(message)s'
+date_format = '%Y-%m-%d %H:%M:%S'
+
+# Определяем общие настройки для всех обработчиков
+common_handler_settings = {
+    'level': logging.DEBUG if DEBUG else logging.INFO,
+    'formatter': logging.Formatter(log_format, date_format),
+}
+
+# Определяем обработчик для консоли
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(logging.Formatter(log_format, date_format))
+console_handler.setLevel(logging.DEBUG)  # Выводить все сообщения от уровня DEBUG
+
+# Определяем обработчик для файла general.log
+general_log_file = os.path.join(BASE_DIR, 'general.log')
+general_log_handler = logging.FileHandler(general_log_file)
+general_log_handler.setFormatter(logging.Formatter(log_format, date_format))
+general_log_handler.setLevel(logging.INFO)  # Выводить сообщения уровня INFO и выше
+
+# Определяем обработчик для файла errors.log
+errors_log_file = os.path.join(BASE_DIR, 'errors.log')
+errors_log_handler = logging.FileHandler(errors_log_file)
+errors_log_handler.setFormatter(logging.Formatter(log_format, date_format))
+errors_log_handler.setLevel(logging.ERROR)  # Выводить сообщения уровня ERROR и выше
+
+# Определяем обработчик для файла security.log
+security_log_file = os.path.join(BASE_DIR, 'security.log')
+security_log_handler = logging.FileHandler(security_log_file)
+security_log_handler.setFormatter(logging.Formatter(log_format, date_format))
+security_log_handler.setLevel(logging.DEBUG)  # Выводить сообщения от уровня DEBUG и выше
+
+# Определяем логгер для django.request и django.server
+django_request_logger = logging.getLogger('django.request')
+django_request_logger.addHandler(errors_log_handler)  # Ошибки попадают в errors.log
+django_request_logger.setLevel(logging.ERROR)  # Выводить сообщения уровня ERROR и выше
+
+django_server_logger = logging.getLogger('django.server')
+django_server_logger.addHandler(errors_log_handler)  # Ошибки попадают в errors.log
+django_server_logger.setLevel(logging.ERROR)  # Выводить сообщения уровня ERROR и выше
+
+# Определяем логгер для django.security
+django_security_logger = logging.getLogger('django.security')
+django_security_logger.addHandler(security_log_handler)  # Все сообщения попадают в security.log
+django_security_logger.setLevel(logging.DEBUG)  # Выводить сообщения от уровня DEBUG и выше
+
+# Установка фильтров для обработчиков
+console_handler.addFilter(lambda record: DEBUG)  # Выводить в консоль только при DEBUG = True
+general_log_handler.addFilter(lambda record: not DEBUG)  # Выводить в general.log только при DEBUG = False
+admin_email_handler = AdminEmailHandler()
+admin_email_handler.setLevel(logging.ERROR)  # Отправлять на почту сообщения уровня ERROR и выше
+
+# Добавляем обработчики к логгеру по умолчанию
+root_logger = logging.getLogger('')
+root_logger.setLevel(logging.DEBUG)  # Включаем все сообщения для корневого логгера
+root_logger.addHandler(console_handler)
+root_logger.addHandler(general_log_handler)
+
+# Добавляем обработчик почтовых сообщений к логгеру django.request
+django_request_logger.addHandler(admin_email_handler)
+
+
+
 

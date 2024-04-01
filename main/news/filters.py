@@ -13,7 +13,7 @@ class NewsFilter(FilterSet):
         model = Post
 
         fields = {
-            'post_type': ['icontains'],
+            'title': ['icontains'],
         }
 
 

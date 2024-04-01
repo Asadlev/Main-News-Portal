@@ -1,4 +1,5 @@
 {% extends 'news/main.html' %}
+{% load custom_filters %}
 
 {% block title %} Главная {% endblock %}
 
@@ -6,25 +7,24 @@
 <br>
 <br>
 <br>
-    <div class="container">
+        <div class="container">
         <h1>Табель Новостей</h1>
         <br>
             <form action="" method="GET">
                 {{ filterset.form.as_p }}
                 <input type="submit" value="Поиск">
             </form>
-        <br>
-            {% if news %}
+            <br>
                 {% for new in news %}
                     <div class="alert alert-warning mt-1">
                         <a href="{% url 'news:news_detail' new.id %}"><h3>Author: {{ new.author }}</h3></a>
                         <p>Title :{{ new.title|truncatewords:2 }}</p>
                     </div>
-            {% endfor %}
-        {% else %}
-            <p> Нет Новостей</p>
-        {% endif %}
-    </div>
+                {% empty %}
+                    <p>Табель Новостей Пуст</p>
+                {% endfor %}
+
+        </div>
 <!--<button> <a href="sign/logout/">Выйти</a> </button>-->
 
 {# Добавляем пагинацию на страницу #}

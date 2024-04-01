@@ -15,7 +15,7 @@ class NewsListView(ListView):
     template_name = 'news_list.html'
     context_object_name = 'news'
     ordering = '-id'
-    paginate_by = 2
+    paginate_by = 4
 
     # Функция для фильтра
     def get_queryset(self):

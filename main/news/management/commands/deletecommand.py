@@ -8,7 +8,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.readable()
         self.stdout.write()
-        answer = input('Вы действительно хотите удалить все товары?(yes/no): ')
+        answer = input('Вы действительно хотите удалить все новости?(yes/no): ')
 
         if answer == 'yes':
             news = Post.objects.all()
