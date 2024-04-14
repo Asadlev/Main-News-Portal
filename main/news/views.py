@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView, TemplateView
+from django.views.generic import ListView, View, DetailView, CreateView, DeleteView, UpdateView, TemplateView
 from django.urls import reverse_lazy
 from django.core.cache import cache  # Импортируем наш кэш
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,6 +7,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .filters import NewsFilter
 from .forms import NewsForm
 from .models import Post
+from django.http.response import HttpResponse  # импортируем респонс для проверки текста
+from django.utils.translation import gettext as _  # импортируем функцию для перевода
+from django.utils.translation import activate, get_supported_language_variant
+from main.settings import LANGUAGE_SESSION_KEY
+import pytz  #  импортируем стандартный модуль для работы с часовыми поясами
+from django.utils import timezone
 # Create your views here.
 
 
@@ -89,6 +95,7 @@ class NewsCreateView(CreateView):
     template_name = 'news_create.html'
     success_url = reverse_lazy('news:news_list')
 
+
 class NewsUpdateView(UpdateView):
     form_class = NewsForm
     model = Post
@@ -102,5 +109,23 @@ class NewsDeleteView(DeleteView):
     success_url = reverse_lazy('news:news_list')
 
 
+class Index(View):
+    def get(self, request):
+        curent_time = timezone.now()
+
+        # .  Translators: This message appears on the home page only
+        models = Post.objects.all()
+
+        context = {
+            'models': models,
+            'current_time': timezone.now(),
+            'timezones': pytz.common_timezones  # добавляем в контекст все доступные часовые пояса
+        }
+
+        return HttpResponse(render(request, 'index.html', context))
 
 
+    #  по пост-запросу будем добавлять в сессию часовой пояс, который и будет обрабатываться написанным нами ранее middleware
+    def post(self, request):
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect('/')

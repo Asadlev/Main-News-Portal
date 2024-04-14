@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import NewsListView, NewsDetailView, NewsCreateView, NewsDeleteView, NewsUpdateView
+from .views import NewsListView, NewsDetailView, NewsCreateView, NewsDeleteView, NewsUpdateView, View
 from . import views
 from django.views.decorators.cache import cache_page
 
@@ -12,4 +12,5 @@ urlpatterns = [
     path('create/', NewsCreateView.as_view(), name='create'),
     path('<int:pk>/delete/', NewsDeleteView.as_view(), name='news_delete'),
     path('<int:pk>/update/', NewsUpdateView.as_view(), name='news_update'),
+    path('noview/', View.as_view(), name='set_language'),
 ]

@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Post, Category, PostCategory, Comment
 from appointment.models import Appointment
+from modeltranslation.admin import TranslationAdmin
 
 
 # def nullfy_news(modeladmin, request, queryset):
@@ -29,6 +30,16 @@ class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('client_name', 'message')
     list_filter = ('client_name', 'message')
     search_fields = ('client_name', 'message')
+
+
+# Регистрируем модели для перевода в админке
+
+class CategoryAdmin(TranslationAdmin):
+    model = Category
+
+
+class PostAdmin(TranslationAdmin):
+    model = Post
 
 
 admin.site.register(Post)

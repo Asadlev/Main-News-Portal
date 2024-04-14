@@ -13,10 +13,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(we2^&=i$jywk)fbx@-5bjd*fb%fnv7(4h6*a+aaju43x&5'
+SECRET_KEY = 'djangawewaeo-insecurawewaeq21321dqee-(we2^&=i$jywk)fbx@-5bjd*fb%fnv7(4h6*a+aaju43x&5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -24,6 +24,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',  # перевод обьязательно до админа
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -58,7 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # mymiddleware
-    # 'main.createmymiddleware.SimpleMiddleware',
+    'news.middlewares.TimezoneMiddleware',  # add that middleware!
     
     # allauth
     'allauth.account.middleware.AccountMiddleware',
@@ -133,7 +135,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
@@ -141,6 +143,15 @@ USE_I18N = True
 
 USE_TZ = True
 
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale')
+]
+
+LANGUAGE_SESSION_KEY = [
+    ('en-us', 'English'),
+    ('ru', 'Русский')
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/

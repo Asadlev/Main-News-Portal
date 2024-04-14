@@ -8,10 +8,6 @@ from datetime import datetime
 from django.core.cache import cache
 
 
-from django.contrib.auth.models import User
-from django.db import models
-
-
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     rating = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
@@ -28,6 +24,7 @@ class Author(models.Model):
 
     def get_absolute_url(self):
         return reverse('mails:news_detail', args=[str(self.id)])
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
