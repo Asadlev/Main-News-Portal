@@ -1,0 +1,106 @@
+{% extends 'news/main.html' %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %} Главная {% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page title</title>
+</head>
+<body>
+    {% comment %}
+    <form method="POST"> {% csrf_token %} <!-- Не забываем по csrf_token для POST-запросов -->
+        <input type="hidden" name="next" value="{{ redirect_to }}">
+
+        <select name="language" id="">
+            {% get_available_languages as LANGUAGES %} <!-- получаем языки -->
+            {% get_language_info_list for LANGUAGES as languages %} <!-- Помещаем их в список languages -->
+
+            {% for language in languages %} <!-- Итерируясь по списку, выводим их название на языке пользователя и код -->
+                <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %} selected {% endif %} >
+                    {{ language.name_local }} - {{ language.code }}
+                </option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="set">
+    </form>
+    {% endcomment %}
+
+    {% for model in models %}
+    <div class="model-class">
+        {{ model.name }}
+    </div>
+    {% endfor %}
+</body>
+</html>
+
+        <div class="container">
+        <h1>Табель Новостей</h1>
+        <br>
+            <form action="" method="GET">
+                {{ filterset.form.as_p }}
+                <input type="submit" value="Поиск">
+            </form>
+            <br>
+                {% for new in news %}
+                    <div class="alert alert-warning mt-1">
+                        <a href="{% url 'news:news_detail' new.id %}"><h3>Author: {{ new.author }}</h3></a>
+                        <p>Title :{{ new.title|truncatewords:2 }}</p>
+                    </div>
+                {% empty %}
+                    <p>Табель Новостей Пуст</p>
+                {% endfor %}
+
+        </div>
+<!--<button> <a href="sign/logout/">Выйти</a> </button>-->
+
+{# Добавляем пагинацию на страницу #}
+
+    {# Информация о предыдущих страницах #}
+    {% if page_obj.has_previous %}
+        <a href="?page=1">1</a>
+        {% if page_obj.previous_page_number != 1 %}
+            ...
+            <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
+    {% endif %}
+
+    {# Информация о текущей странице #}
+    {{ page_obj.number }}
+
+    {# Информация о следующих страницах #}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+        {% if paginator.num_pages != page_obj.next_page_number %}
+            ...
+            <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+        {% endif %}
+    {% endif %}
+
+<br>
+<br>
+<br>
+<form action="{% url 'sign:logout' %}" method="post">
+    {% csrf_token %}
+</form>
+
+
+{% comment %}
+<br>
+<br>
+<a href="{% url 'news:set_time' %}">timezone</a>
+<br>
+<br>
+<a href="{% url 'news:set_language' %}">language</a>
+{% endcomment %}
+<a href="{% url 'news:news_ser' %}">restApi</a>
+{% endblock %}

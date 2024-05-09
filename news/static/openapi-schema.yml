@@ -1,0 +1,54 @@
+openapi: 3.0.2
+info:
+  title: 'Some application'
+  version: "0.1"
+paths:
+  /schools/:
+    get:
+      operationId: listSchools
+      description: 'List of schools'
+      parameters: []
+      responses:
+        '200':
+          content:
+          application/json:
+            schema:
+              type: array
+              items:
+                  $ref: '#/components/schemas/School'
+          description: ''
+      tags:
+        - schools
+
+    post:
+      operationId: createSchool
+      description: 'Create school'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/School'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+          description: ''
+      tags:
+        - schools
+
+components:
+  schemas:
+    School:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 64
+      required:
+        - name

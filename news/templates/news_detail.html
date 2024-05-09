@@ -1,0 +1,35 @@
+{% extends 'news/main.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+    <h1>News Detail</h1>
+<div class="alert alert-warning mt=2">
+    <h1>Author: {{ new.author }}</h1>
+    <h2>Title: {{ new.title }}</h2>
+    <p>Дата: {{ new.created_at }}</p>
+    <p>{{ new.text }}</p>
+    <p>rating: {{ new.rating }}</p>
+            <div class="container">
+                    <div class="text-center mt-10">
+                        <br>
+                        <a href="update/">Редактировать Задачу</a>
+                        <br>
+                        <a href="delete/">Удалить Задачу</a>
+                        <br>
+                        <a href="{% url 'news:post_detail' new.id %}">restApi</a>
+                    </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    </div>
+</div>
+{% endblock %}
+
